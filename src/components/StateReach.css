@@ -1,0 +1,166 @@
+.reach {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 24px 36px;
+  align-items: end;
+}
+
+/* Headline */
+.reach-headline {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.reach-title {
+  font-size: clamp(60px, 11vw, 152px);
+  line-height: 0.74;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 0;
+}
+
+.reach-title-accent {
+  color: var(--blue);
+}
+
+.reach-sub {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Contacts */
+.reach-contacts {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.reach-label {
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+.reach-primary-link {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 6px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.reach-primary-link:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+.reach-email {
+  font-size: clamp(11px, 1.3vw, 15px);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  word-break: break-all;
+}
+
+.reach-email-arrow {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.reach-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.reach-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+}
+
+.reach-link:hover {
+  color: var(--ink);
+}
+
+.reach-link-arrow {
+  font-size: 12px;
+}
+
+/* Terminal block */
+.reach-terminal {
+  grid-column: 1;
+  grid-row: 2;
+  border: 1px solid var(--ink);
+  overflow: hidden;
+}
+
+.reach-terminal-bar {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.reach-terminal-body {
+  padding: 16px 14px;
+  min-height: 48px;
+  font-size: 14px;
+  color: var(--blue);
+}
+
+.reach-cursor {
+  animation: cursorBlink 1.2s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (max-width: 800px) {
+  .reach {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .reach-contacts {
+    grid-column: 1;
+    grid-row: 2;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .reach-terminal {
+    grid-row: 3;
+  }
+}
+
+@media (max-width: 520px) {
+  .reach-title {
+    font-size: clamp(50px, 15vw, 80px);
+  }
+}

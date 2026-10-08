@@ -1,0 +1,48 @@
+.presence {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: end;
+}
+
+.presence-title {
+  font-size: clamp(52px, 9vw, 130px);
+  line-height: 0.82;
+  letter-spacing: -0.075em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.presence-title em {
+  color: var(--blue);
+  font-style: italic;
+}
+
+.presence-body {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.presence-copy {
+  font-size: clamp(17px, 2vw, 26px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  max-width: 500px;
+}
+
+.presence-micro {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (max-width: 800px) {
+  .presence {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}

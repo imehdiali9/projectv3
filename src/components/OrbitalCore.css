@@ -1,0 +1,243 @@
+/* ═══════════════════════════════════════════
+   OrbitalCore — central persistent instrument
+   ═══════════════════════════════════════════ */
+
+.orbital-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(62vw, 720px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+
+/* Concentric rings */
+.c-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.c-ring.r1 {
+  border: 1px solid var(--line);
+}
+
+.c-ring.r2 {
+  inset: 9%;
+  border: 1px dashed rgba(23, 23, 23, 0.14);
+}
+
+.c-ring.r3 {
+  inset: 26%;
+  border: 1.5px solid rgba(25, 71, 229, 0.45);
+}
+
+/* Central dot */
+.c-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow:
+    0 0 0 10px rgba(25, 71, 229, 0.09),
+    0 0 0 1px rgba(25, 71, 229, 0.4);
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+/* Identity block */
+.c-identity {
+  position: relative;
+  width: 68%;
+  z-index: 5;
+  text-align: center;
+  transform-origin: center;
+  will-change: transform, opacity;
+  transition: opacity 0.4s ease;
+}
+
+.c-identity-pre {
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.c-identity-name {
+  font-size: clamp(56px, 11vw, 168px);
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+  font-weight: 900;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.02em;
+}
+
+.c-name-part {
+  display: inline-block;
+  will-change: transform;
+  transition: transform 0.65s cubic-bezier(0.16, 0.8, 0.16, 1);
+}
+
+.c-name-part.accent {
+  color: var(--blue);
+}
+
+.c-identity-sub {
+  margin: 22px auto 0;
+  max-width: 380px;
+  font-size: clamp(14px, 1.8vw, 20px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ink-light);
+}
+
+.c-highlight {
+  font-style: normal;
+  background: var(--lime);
+  padding: 1px 5px;
+}
+
+/* Orbit nav */
+.c-orbit {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.c-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--ink);
+  background: rgba(243, 241, 235, 0.88);
+  backdrop-filter: blur(4px);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.28s var(--ease-out-expo),
+    box-shadow 0.2s;
+  min-width: 64px;
+}
+
+.c-node:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.c-node:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.c-node-signal {
+  font-size: 9px;
+  opacity: 0.55;
+  display: block;
+  color: inherit;
+}
+
+.c-node-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Edge labels */
+.c-edge-label {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Corner note */
+.c-corner-note {
+  position: absolute;
+  left: 0;
+  bottom: -80px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+  max-width: 220px;
+}
+
+/* Scroll hint */
+.c-scroll-hint {
+  position: absolute;
+  right: 0;
+  bottom: -80px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 10px;
+}
+
+.c-scroll-line {
+  width: 32px;
+  height: 1px;
+  background: var(--ink);
+  animation: scrollHintPulse 1.5s ease-in-out infinite alternate;
+  display: block;
+}
+
+@keyframes scrollHintPulse {
+  to { width: 54px; }
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .orbital-core {
+    width: min(88vw, 480px);
+  }
+}
+
+@media (max-width: 520px) {
+  .orbital-core {
+    width: 94vw;
+  }
+
+  .c-identity-name {
+    font-size: clamp(48px, 14vw, 80px);
+  }
+
+  .c-identity-sub {
+    font-size: 13px;
+    max-width: 260px;
+  }
+
+  .c-node {
+    padding: 6px 9px;
+    min-width: 50px;
+  }
+
+  .c-node-label {
+    font-size: 10px;
+  }
+
+  .c-corner-note,
+  .c-scroll-hint {
+    bottom: -64px;
+  }
+
+  .c-edge-label {
+    display: none;
+  }
+}

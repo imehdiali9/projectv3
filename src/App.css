@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════
+   App — Page-level layout
+   ═══════════════════════════════════════════ */
+
+.page-body {
+  position: relative;
+  min-height: 600vh;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.scroll-chapter {
+  height: 100svh;
+}
+
+/* ─── PRESENCE copy block ───────────────────
+   Appears in the bottom-left of the stage when state=0.
+   Not inside the OrbitalCore — it lives in the stage as
+   an editorial annotation.
+   ─────────────────────────────────────────── */
+.presence-copy-block {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* Horizontally centered, matching the editorial feel */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  padding: 0 clamp(20px, 4vw, 60px) clamp(40px, 6vh, 80px);
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.5s ease, transform 0.6s var(--ease-out-expo);
+}
+
+.presence-copy-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.presence-copy-block.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.presence-copy-inner {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 460px;
+}
+
+.presence-tag {
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.presence-statement {
+  font-size: clamp(36px, 5.5vw, 76px);
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.presence-statement em {
+  font-style: italic;
+  color: var(--blue);
+}
+
+.presence-about {
+  font-size: clamp(13px, 1.5vw, 17px);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 360px;
+}
+
+.presence-micro {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* Skip link */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 18px;
+  z-index: 9999;
+  background: var(--blue);
+  color: white;
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 18px;
+}
+
+/* ─── Responsive ─────────────────────────── */
+@media (max-width: 800px) {
+  .presence-copy-block {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .presence-copy-block {
+    padding: 0 16px 30px;
+  }
+
+  .presence-statement {
+    font-size: clamp(28px, 9vw, 44px);
+  }
+}

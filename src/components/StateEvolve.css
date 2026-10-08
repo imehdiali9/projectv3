@@ -1,0 +1,150 @@
+.evolve {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.evolve-title {
+  font-size: clamp(44px, 8vw, 118px);
+  line-height: 0.82;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin-bottom: 44px;
+}
+
+.evolve-title-accent {
+  color: var(--blue);
+}
+
+/* Measuring instrument */
+.evolve-instrument {
+  position: relative;
+  height: 240px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.evolve-baseline {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  height: 1.5px;
+  background: var(--ink);
+  transform: translateY(-50%);
+}
+
+/* Tick marks */
+.evolve-tick {
+  position: absolute;
+  top: 50%;
+  width: 1px;
+  background: var(--ink);
+  transform: translateY(-50%);
+  transition: height 0.4s var(--ease-out-expo);
+}
+
+.evolve-tick.is-now {
+  background: var(--red);
+  width: 1.5px;
+}
+
+.evolve-tick-label {
+  position: absolute;
+  left: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.evolve-tick-label.label-top {
+  bottom: calc(100% + 6px);
+}
+
+.evolve-tick-label.label-bottom {
+  top: calc(100% + 6px);
+}
+
+.evolve-tick-year {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.evolve-tick-event {
+  font-size: 10px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* NOW dot */
+.evolve-now-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--red);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 8px rgba(255, 86, 55, 0.12);
+  animation: nowPulse 2s ease-in-out infinite;
+}
+
+@keyframes nowPulse {
+  0%, 100% { box-shadow: 0 0 0 8px rgba(255, 86, 55, 0.12); }
+  50% { box-shadow: 0 0 0 16px rgba(255, 86, 55, 0.04); }
+}
+
+/* YOU ARE HERE label */
+.evolve-here {
+  position: absolute;
+  top: 16px;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--red);
+  letter-spacing: 0.06em;
+}
+
+/* Notes list */
+.evolve-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+
+.evolve-note {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.evolve-note.is-active {
+  color: var(--red);
+}
+
+.evolve-note-marker {
+  width: 16px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 520px) {
+  .evolve-instrument {
+    height: 180px;
+  }
+
+  .evolve-tick-label {
+    display: none;
+  }
+
+  .evolve-tick:is(.is-now) .evolve-tick-label {
+    display: flex;
+  }
+}
