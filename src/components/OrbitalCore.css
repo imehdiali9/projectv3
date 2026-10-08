@@ -78,13 +78,41 @@
   gap: 0.02em;
 }
 
-.c-name-part {
-  display: inline-block;
-  will-change: transform;
-  transition: transform 0.65s cubic-bezier(0.16, 0.8, 0.16, 1);
+.c-telemetry {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--blue);
+  letter-spacing: 0.12em;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  background: rgba(243, 241, 235, 0.85);
+  padding: 3px 8px;
+  border: 1px solid rgba(25, 71, 229, 0.3);
+  border-radius: 2px;
+  transition: opacity 0.2s ease;
+  z-index: 6;
 }
 
-.c-name-part.accent {
+.c-word {
+  display: inline-flex;
+  will-change: transform;
+}
+
+.c-glyph {
+  display: inline-block;
+  will-change: transform, opacity;
+  transition: filter 0.2s ease;
+}
+
+.c-word.accent {
+  color: var(--blue);
+}
+
+.c-glyph-dot {
   color: var(--blue);
 }
 

@@ -72,13 +72,65 @@ export function playNodeClick() {
 }
 
 /**
+ * Play a low mechanical confirmation when BUILD locks into place.
+ */
+export function playBuildLockConfirmation() {
+  if (!isAudioEnabled || !ctx) return;
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(140, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.12);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(600, ctx.currentTime);
+
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.15);
+  } catch {
+    // Ignore audio errors
+  }
+}
+
+/**
+ * Play a subtle harmonic shift during PRESENCE → BUILD transformation.
+ */
+export function playTransformationHarmonic(phase = 'B') {
+  if (!isAudioEnabled || !ctx) return;
+  try {
+    const freq = phase === 'B' ? 246.94 : phase === 'C' ? 261.63 : 277.18;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(freq + 12, ctx.currentTime + 0.2);
+
+    gain.gain.setValueAtTime(0.025, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.22);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.24);
+  } catch {
+    // Ignore audio errors
+  }
+}
+
+/**
  * Play a gentle resonant frequency ping when changing states.
- * Frequencies correspond to an A major pentatonic chord progression:
- * 0: 220Hz (PRESENCE)
- * 1: 277.18Hz (BUILD)
- * 2: 329.63Hz (BROADCAST)
- * 3: 440Hz (EVOLVE)
- * 4: 554.37Hz (REACH)
  */
 const STATE_FREQUENCIES = [220, 277.18, 329.63, 440, 554.37];
 
