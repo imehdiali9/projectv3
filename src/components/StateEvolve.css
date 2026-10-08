@@ -144,7 +144,7 @@
     display: none;
   }
 
-  .evolve-tick:is(.is-now) .evolve-tick-label {
+  .evolve-tick.is-now .evolve-tick-label {
     display: flex;
   }
 }

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { PROJECTS } from '../data/content';
 import BuildWave from './BuildWave';
 import './StateBuild.css';

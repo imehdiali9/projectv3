@@ -107,12 +107,41 @@
   font-size: 12px;
 }
 
+.reach-email-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reach-copy-btn {
+  font-size: 9px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.reach-copy-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.reach-copy-btn.copied {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
 /* Terminal block */
 .reach-terminal {
   grid-column: 1;
   grid-row: 2;
   border: 1px solid var(--ink);
   overflow: hidden;
+  background: rgba(23, 23, 23, 0.02);
 }
 
 .reach-terminal-bar {
@@ -126,19 +155,43 @@
 }
 
 .reach-terminal-body {
-  padding: 16px 14px;
-  min-height: 48px;
-  font-size: 14px;
+  padding: 14px 14px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.reach-log-line {
+  color: var(--muted);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.reach-term-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.reach-prompt {
   color: var(--blue);
+  font-weight: 700;
 }
 
-.reach-cursor {
-  animation: cursorBlink 1.2s step-end infinite;
+.reach-term-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-size: 11px;
 }
 
-@keyframes cursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+.reach-term-input::placeholder {
+  color: rgba(23, 23, 23, 0.3);
 }
 
 @media (max-width: 800px) {

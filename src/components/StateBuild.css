@@ -202,14 +202,15 @@
 
 @media (max-width: 520px) {
   .build-row {
-    grid-template-columns: 44px 1fr;
+    grid-template-columns: 36px 1fr auto;
   }
 
-  .build-row-meta {
+  .build-row-type,
+  .build-row-year {
     display: none;
   }
 
   .build-row-name {
-    font-size: 26px;
+    font-size: 24px;
   }
 }

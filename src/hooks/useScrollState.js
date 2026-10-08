@@ -17,7 +17,7 @@ export function useScrollState(totalStates = 5) {
   });
 
   const lastScrollY = useRef(0);
-  const lastTime = useRef(performance.now());
+  const lastTime = useRef(0);
   const velocityRef = useRef(0);
 
   const handleScroll = useCallback(() => {

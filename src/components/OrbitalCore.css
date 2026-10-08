@@ -137,9 +137,29 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
+.c-node.is-active {
+  border-color: var(--blue);
+  background: rgba(25, 71, 229, 0.08);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+
+.c-node.is-active .c-node-signal {
+  color: var(--blue);
+  opacity: 1;
+  font-weight: 700;
+}
+
 .c-node:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 2px;
+}
+
+/* Decorations wrapper — fades out smoothly on scroll */
+.c-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 .c-node-signal {
