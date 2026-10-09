@@ -22,6 +22,20 @@
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Visual Layer Architecture (Z-Index Scale) */
+  --z-bg: 0;
+  --z-ambient: 1;
+  --z-network: 2;
+  --z-stage: 3;
+  --z-orbital-core: 1;
+  --z-presence-copy: 2;
+  --z-build: 4;
+  --z-transmission: 4;
+  --z-controls: 5;
+  --z-hud: 10;
+  --z-hud-progress: 11;
+  --z-texture: 20;
+  --z-skip-link: 30;
 }
 
 /* Reset */
@@ -53,7 +67,7 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 200;
+  z-index: var(--z-texture, 20);
   opacity: 0.14;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
   mix-blend-mode: multiply;

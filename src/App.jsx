@@ -174,10 +174,12 @@ export default function App() {
 
           {/* PRESENCE state editorial statement */}
           <div
-            className={`presence-copy-block ${isPresenceCopyVisible ? 'visible' : 'hidden'}`}
+            className="presence-copy-block"
             style={{
-              opacity: Math.max(0, 1 - presenceToBuildProgress * 4),
+              opacity: isPresenceCopyVisible ? Math.max(0, 1 - presenceToBuildProgress * 4) : 0,
               transform: `translateY(${presenceToBuildProgress * 24}px)`,
+              pointerEvents: isPresenceCopyVisible ? 'auto' : 'none',
+              visibility: presenceToBuildProgress >= 0.25 ? 'hidden' : 'visible',
             }}
             aria-hidden={!isPresenceCopyVisible}
           >
@@ -201,7 +203,9 @@ export default function App() {
           {/* Emergent spatial BUILD state — no opaque wall */}
           <StateBuild
             progress={presenceToBuildProgress}
+            localProgress={localProgress}
             isActive={stateIndex === 1}
+            rawState={rawState}
             velocity={velocity}
           />
 

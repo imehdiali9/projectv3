@@ -7,231 +7,329 @@ import './StateBuild.css';
 /**
  * StateBuild — the architectural BUILD environment.
  *
- * Emerges directly FROM the PRESENCE → BUILD physical transformation:
- * - No opaque wall hiding the orbital system.
- * - Spatial, edge-to-edge composition across the full viewport.
- * - Primary emerged specimen: THE LEDGER (001).
- * - Secondary instruments: ESTATE PRO (002), EXPERIMENTS (003).
+ * MILESTONE 01A: STRUCTURAL STABILIZATION
+ * - Centered via dedicated .build-stage-wrapper element (immune to transform overwrite)
+ * - Single source of vertical scroll: ZERO nested overflow/scroll containers
+ * - Full viewport composition fitting 1366x768, 1440x900, 1920x1080 and mobile
+ * - Hierarchical progression: THE LEDGER is the primary dominant specimen;
+ *   secondary specimens (002 ESTATE PRO & 003 EXPERIMENTS) are subordinate and
+ *   progressively established via scroll (localProgress) or direct tab selection.
+ * - 100% reversible and deterministic with document scroll.
  */
 export default function StateBuild({
   progress = 0,
+  localProgress = 0,
   isActive = false,
+  rawState = 0,
 }) {
-  const [activeSecondary, setActiveSecondary] = useState(null);
+  // Derive default view purely from scroll position:
+  // localProgress < 0.48: Primary Specimen (THE LEDGER) dominates
+  // localProgress >= 0.48: Secondary Instruments (ESTATE PRO & EXPERIMENTS) prominent
+  const scrollDefaultView = localProgress >= 0.48 ? 'secondary' : 'ledger';
+  const currentZone = localProgress >= 0.48 ? 1 : 0;
 
-  // The primary emerged hero project
+  // Track intentional manual tab click within the active scroll zone
+  const [userSelection, setUserSelection] = useState({ view: null, zone: null });
+
+  // When scrolling crosses zone boundary, scroll automatically drives the view
+  const activeView =
+    userSelection.zone === currentZone && userSelection.view
+      ? userSelection.view
+      : scrollDefaultView;
+
   const ledger = PROJECTS[0];
-  // Secondary projects
-  const secondaryProjects = PROJECTS.slice(1);
+  const estatePro = PROJECTS[1];
+  const experiments = PROJECTS[2];
 
-  // Calculate emergence opacity and displacement based on transition progress (0.45 → 1.0)
-  const isEmerging = progress >= 0.45 || isActive;
-  const emergenceProgress = Math.min(1, Math.max(0, (progress - 0.45) / 0.4));
-  
-  // Opacity: 0 at t=0.45 -> 1.0 at t=0.85+
-  const displayOpacity = isActive ? 1 : emergenceProgress;
-  const translateY = isActive ? 0 : (1 - emergenceProgress) * 40;
-
-  const handleSecondaryToggle = (slug) => {
-    playNodeClick();
-    setActiveSecondary((prev) => (prev === slug ? null : slug));
-  };
-
+  // Visibility range: emerges in Phase C/D (progress >= 0.40) and remains active during State 1
+  const isEmerging = (progress >= 0.40 && rawState < 2.05) || isActive;
   if (!isEmerging && !isActive) {
     return null;
   }
 
+  // Emergence calculation (0.40 -> 0.85)
+  const emergenceProgress = Math.min(1, Math.max(0, (progress - 0.40) / 0.45));
+  const displayOpacity = isActive ? 1 : emergenceProgress;
+  const translateY = isActive ? 0 : (1 - emergenceProgress) * 32;
+
+  const handleSelectView = (viewKey) => {
+    playNodeClick();
+    setUserSelection({ view: viewKey, zone: currentZone });
+  };
+
   return (
     <div
-      className={`build-spatial-stage ${isActive ? 'is-active' : ''}`}
-      style={{
-        opacity: displayOpacity,
-        transform: `translateY(${translateY}px)`,
-        pointerEvents: isActive ? 'auto' : 'none',
-      }}
-      role="region"
-      aria-label="02 BUILD — Selected Instruments"
+      className="build-stage-wrapper"
+      aria-hidden={!isActive && displayOpacity < 0.1}
     >
-      {/* Top Architecture Status Bar */}
-      <header className="build-status-bar mono" aria-label="System calibration">
-        <div className="build-status-left">
-          <span className="build-status-dot" />
-          <span className="build-status-channel">02 / BUILD — SELECTED INSTRUMENTS</span>
-        </div>
-        <div className="build-status-right">
-          <span className="build-telemetry">SIGNAL: LOCKED</span>
-          <span className="build-telemetry">FREQ: 142.8 MHz</span>
-          <span className="build-telemetry">SPECIMEN: 001/003</span>
-        </div>
-      </header>
-
-      {/* Primary Emerged Specimen: THE LEDGER */}
-      <section className="build-specimen" aria-label="Primary Instrument: The Ledger">
-        <div className="specimen-main-grid">
-          {/* Left Column: Architectural Title, Metadata, Narrative */}
-          <div className="specimen-left">
-            <div className="specimen-badge-row">
-              <span className="specimen-badge mono">ARTIFACT {ledger.id}</span>
-              <span className="specimen-type mono">{ledger.type}</span>
-              <span className="specimen-year mono">{ledger.year}</span>
-            </div>
-
-            <h2 className="specimen-title" aria-label={ledger.name}>
-              {['T', 'H', 'E', ' ', 'L', 'E', 'D', 'G', 'E', 'R'].map((char, i) => (
-                <span
-                  key={i}
-                  className="specimen-char"
-                  style={{
-                    display: 'inline-block',
-                    transitionDelay: `${i * 15}ms`,
-                    transform: isActive ? 'none' : `translateY(${(1 - emergenceProgress) * (i % 2 ? 15 : -15)}px)`,
-                  }}
-                >
-                  {char === ' ' ? '\u00A0' : char}
-                </span>
-              ))}
-            </h2>
-
-            <p className="specimen-subtitle mono">{ledger.subtitle}</p>
-
-            <div className="specimen-narrative">
-              <div className="narrative-block">
-                <span className="narrative-label mono">WHY IT EXISTS</span>
-                <p className="narrative-text">{ledger.why}</p>
-              </div>
-
-              <div className="narrative-block">
-                <span className="narrative-label mono">WHAT IT TAUGHT ME</span>
-                <p className="narrative-text">{ledger.lesson}</p>
-              </div>
-            </div>
-
-            {/* Stack badges */}
-            <div className="specimen-stack-wrap">
-              <span className="stack-label mono">ENGINEERING STACK</span>
-              <div className="specimen-stack" role="list">
-                {ledger.stack.map((tech) => (
-                  <span key={tech} className="tech-chip mono" role="listitem">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Triggers */}
-            <div className="specimen-actions">
-              {ledger.live && (
-                <a
-                  href={ledger.live}
-                  className="specimen-btn primary mono"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View live application"
-                >
-                  <span>LAUNCH SITE</span>
-                  <span className="btn-arrow" aria-hidden="true">↗</span>
-                </a>
-              )}
-              {ledger.github && (
-                <a
-                  href={ledger.github}
-                  className="specimen-btn secondary mono"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View repository source"
-                >
-                  <span>SOURCE CODE</span>
-                  <span className="btn-arrow" aria-hidden="true">↗</span>
-                </a>
-              )}
-            </div>
+      <div
+        className={`build-spatial-stage ${isActive ? 'is-active' : ''}`}
+        style={{
+          '--build-offset-y': `${translateY}px`,
+          '--build-opacity': displayOpacity,
+          pointerEvents: isActive ? 'auto' : 'none',
+        }}
+        role="region"
+        aria-label="02 BUILD — Selected Instruments"
+      >
+        {/* Top Architecture Status Bar */}
+        <header className="build-status-bar mono" aria-label="System calibration">
+          <div className="build-status-left">
+            <span className="build-status-dot" aria-hidden="true" />
+            <span className="build-status-channel">02 / BUILD — SELECTED INSTRUMENTS</span>
           </div>
 
-          {/* Right Column: Live Oscilloscope Waveform & Interface Specimen */}
-          <div className="specimen-right">
-            <div className="specimen-instrument-panel">
-              <div className="panel-header mono">
-                <span>SIGNAL OSCILLOSCOPE / TRACE</span>
-                <span className="panel-status">LIVE FEED</span>
-              </div>
-              <BuildWave />
-            </div>
+          {/* Hierarchical Specimen Selector Pills */}
+          <nav className="build-specimen-nav" aria-label="Specimen views">
+            <button
+              className={`specimen-nav-btn ${activeView === 'ledger' ? 'is-active' : ''}`}
+              onClick={() => handleSelectView('ledger')}
+              aria-pressed={activeView === 'ledger'}
+            >
+              <span className="specimen-nav-id">001</span>
+              <span>THE LEDGER</span>
+            </button>
+            <button
+              className={`specimen-nav-btn ${activeView === 'secondary' ? 'is-active' : ''}`}
+              onClick={() => handleSelectView('secondary')}
+              aria-pressed={activeView === 'secondary'}
+            >
+              <span className="specimen-nav-id">002–003</span>
+              <span>ORBITAL SPECIMENS</span>
+            </button>
+          </nav>
 
-            <div className="specimen-detail-card">
-              <div className="detail-card-header mono">
-                <span>SYSTEM ARCHITECTURE</span>
-                <span>SUPABASE / PG</span>
-              </div>
-              <p className="detail-card-body">{ledger.detail}</p>
-            </div>
+          <div className="build-status-right">
+            <span className="build-telemetry">SIGNAL: LOCKED</span>
+            <span className="build-telemetry">FREQ: 142.8 MHz</span>
+            <span className="build-telemetry">
+              {activeView === 'ledger' ? 'SPECIMEN: 001/003' : 'SPECIMEN: 002-003/003'}
+            </span>
           </div>
-        </div>
-      </section>
+        </header>
 
-      {/* Secondary Instruments Explorer */}
-      <section className="build-secondary" aria-label="Secondary Instruments">
-        <div className="secondary-header mono">
-          <span>ADDITIONAL INSTRUMENTS IN ORBIT</span>
-          <span>SELECT TO INSPECT</span>
-        </div>
+        {/* ─── PRIMARY SPECIMEN VIEW: THE LEDGER (001) ─── */}
+        {activeView === 'ledger' && (
+          <section className="build-specimen-panel" aria-label="Primary Instrument: The Ledger">
+            <div className="specimen-main-grid">
+              {/* Left Column: Title, Metadata, Narrative, Stack, Actions */}
+              <div className="specimen-left">
+                <div className="specimen-badge-row">
+                  <span className="specimen-badge mono">ARTIFACT {ledger.id}</span>
+                  <span className="specimen-type mono">{ledger.type}</span>
+                  <span className="specimen-year mono">{ledger.year}</span>
+                </div>
 
-        <div className="secondary-list" role="list">
-          {secondaryProjects.map((proj) => {
-            const isExpanded = activeSecondary === proj.slug;
-            return (
-              <div key={proj.slug} className="secondary-row-item" role="listitem">
-                <button
-                  className={`secondary-trigger ${isExpanded ? 'is-open' : ''}`}
-                  onClick={() => handleSecondaryToggle(proj.slug)}
-                  aria-expanded={isExpanded}
-                >
-                  <div className="secondary-meta mono">
-                    <span className="sec-id">{proj.id}</span>
-                    <span className="sec-type">{proj.type}</span>
+                <h2 className="specimen-title" aria-label={ledger.name}>
+                  {['T', 'H', 'E', ' ', 'L', 'E', 'D', 'G', 'E', 'R'].map((char, i) => (
+                    <span
+                      key={i}
+                      className="specimen-char"
+                      style={{
+                        display: 'inline-block',
+                        transform: isActive
+                          ? 'none'
+                          : `translateY(${(1 - emergenceProgress) * (i % 2 ? 12 : -12)}px)`,
+                      }}
+                    >
+                      {char === ' ' ? '\u00A0' : char}
+                    </span>
+                  ))}
+                </h2>
+
+                <p className="specimen-subtitle mono">{ledger.subtitle}</p>
+
+                <div className="specimen-narrative">
+                  <div className="narrative-block">
+                    <span className="narrative-label mono">WHY IT EXISTS</span>
+                    <p className="narrative-text">{ledger.why}</p>
                   </div>
-                  <span className="sec-name">{proj.name}</span>
-                  <span className="sec-subtitle mono">{proj.subtitle}</span>
-                  <span className="sec-arrow" aria-hidden="true">
-                    {isExpanded ? '−' : '+'}
-                  </span>
-                </button>
 
-                {isExpanded && (
-                  <div className="secondary-drawer">
-                    <div className="drawer-grid">
-                      <div className="drawer-text">
-                        <span className="drawer-sublabel mono">RATIONALE</span>
-                        <p>{proj.why}</p>
-                        <span className="drawer-sublabel mono">LESSON</span>
-                        <p>{proj.lesson}</p>
-                      </div>
-                      <div className="drawer-stack">
-                        <span className="drawer-sublabel mono">STACK</span>
-                        <div className="drawer-chips">
-                          {proj.stack.map((t) => (
-                            <span key={t} className="tech-chip mono">{t}</span>
-                          ))}
-                        </div>
-                        {proj.github && (
-                          <a
-                            href={proj.github}
-                            className="specimen-btn secondary mono drawer-btn"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <span>GITHUB REPO</span>
-                            <span className="btn-arrow">↗</span>
-                          </a>
-                        )}
-                      </div>
-                    </div>
+                  <div className="narrative-block">
+                    <span className="narrative-label mono">WHAT IT TAUGHT ME</span>
+                    <p className="narrative-text">{ledger.lesson}</p>
                   </div>
-                )}
+                </div>
+
+                {/* Stack badges */}
+                <div className="specimen-stack-wrap">
+                  <span className="stack-label mono">ENGINEERING STACK</span>
+                  <div className="specimen-stack" role="list">
+                    {ledger.stack.map((tech) => (
+                      <span key={tech} className="tech-chip mono" role="listitem">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Triggers */}
+                <div className="specimen-actions">
+                  {ledger.live && (
+                    <a
+                      href={ledger.live}
+                      className="specimen-btn primary mono"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View live application"
+                    >
+                      <span>LAUNCH SITE</span>
+                      <span className="btn-arrow" aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                  {ledger.github && (
+                    <a
+                      href={ledger.github}
+                      className="specimen-btn secondary mono"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View repository source"
+                    >
+                      <span>SOURCE CODE</span>
+                      <span className="btn-arrow" aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </div>
               </div>
-            );
-          })}
-        </div>
-      </section>
+
+              {/* Right Column: Oscilloscope Waveform & Interface Specimen */}
+              <div className="specimen-right">
+                <div className="specimen-instrument-panel">
+                  <BuildWave />
+                </div>
+
+                <div className="specimen-detail-card">
+                  <div className="detail-card-header mono">
+                    <span>SYSTEM ARCHITECTURE</span>
+                    <span>SUPABASE / PG</span>
+                  </div>
+                  <p className="detail-card-body">{ledger.detail}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ─── SECONDARY SPECIMENS VIEW: ESTATE PRO & EXPERIMENTS ─── */}
+        {activeView === 'secondary' && (
+          <section className="build-secondary-panel" aria-label="Secondary Instruments">
+            <div className="secondary-specimens-grid">
+              {/* Card 002: ESTATE PRO */}
+              <article className="secondary-instrument-card" aria-label="Artifact 002: Estate Pro">
+                <div className="sec-card-header">
+                  <div className="specimen-badge-row">
+                    <span className="specimen-badge mono">ARTIFACT {estatePro.id}</span>
+                    <span className="specimen-type mono">{estatePro.type}</span>
+                    <span className="specimen-year mono">{estatePro.year}</span>
+                  </div>
+                  <h3 className="sec-card-title">{estatePro.name}</h3>
+                  <p className="specimen-subtitle mono">{estatePro.subtitle}</p>
+                </div>
+
+                <div className="sec-card-narrative">
+                  <div className="narrative-block">
+                    <span className="narrative-label mono">RATIONALE</span>
+                    <p className="narrative-text">{estatePro.why}</p>
+                  </div>
+                  <div className="narrative-block">
+                    <span className="narrative-label mono">LESSON</span>
+                    <p className="narrative-text">{estatePro.lesson}</p>
+                  </div>
+                </div>
+
+                <div className="sec-card-footer">
+                  <div className="specimen-stack" role="list">
+                    {estatePro.stack.map((t) => (
+                      <span key={t} className="tech-chip mono" role="listitem">{t}</span>
+                    ))}
+                  </div>
+                  {estatePro.github && (
+                    <a
+                      href={estatePro.github}
+                      className="specimen-btn secondary mono sec-action-btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View Estate Pro repository"
+                    >
+                      <span>SOURCE CODE</span>
+                      <span className="btn-arrow" aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </div>
+              </article>
+
+              {/* Card 003: EXPERIMENTS */}
+              <article className="secondary-instrument-card" aria-label="Artifact 003: Experiments">
+                <div className="sec-card-header">
+                  <div className="specimen-badge-row">
+                    <span className="specimen-badge mono">ARTIFACT {experiments.id}</span>
+                    <span className="specimen-type mono">{experiments.type}</span>
+                    <span className="specimen-year mono">{experiments.year}</span>
+                  </div>
+                  <h3 className="sec-card-title">{experiments.name}</h3>
+                  <p className="specimen-subtitle mono">{experiments.subtitle}</p>
+                </div>
+
+                <div className="sec-card-narrative">
+                  <div className="narrative-block">
+                    <span className="narrative-label mono">RATIONALE</span>
+                    <p className="narrative-text">{experiments.why}</p>
+                  </div>
+                  <div className="narrative-block">
+                    <span className="narrative-label mono">LESSON</span>
+                    <p className="narrative-text">{experiments.lesson}</p>
+                  </div>
+                </div>
+
+                <div className="sec-card-footer">
+                  <div className="specimen-stack" role="list">
+                    {experiments.stack.map((t) => (
+                      <span key={t} className="tech-chip mono" role="listitem">{t}</span>
+                    ))}
+                  </div>
+                  {experiments.github && (
+                    <a
+                      href={experiments.github}
+                      className="specimen-btn secondary mono sec-action-btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View Experiments repository"
+                    >
+                      <span>SOURCE CODE</span>
+                      <span className="btn-arrow" aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </div>
+              </article>
+            </div>
+          </section>
+        )}
+
+        {/* Bottom Subordinate Bar / Scroll Prompt */}
+        <footer className="build-bottom-bar mono">
+          <div className="build-bottom-hint">
+            {activeView === 'ledger' ? (
+              <span>SPECIMEN 001/003 (PRIMARY) · SCROLL FOR ORBITAL INSTRUMENTS ↓</span>
+            ) : (
+              <span>SPECIMENS 002–003/003 (ORBITAL) · SCROLL UP FOR THE LEDGER ↑</span>
+            )}
+          </div>
+          <div className="build-bottom-toggle">
+            <button
+              className={`bottom-toggle-btn ${activeView === 'ledger' ? 'is-active' : ''}`}
+              onClick={() => handleSelectView('ledger')}
+            >
+              001 THE LEDGER
+            </button>
+            <button
+              className={`bottom-toggle-btn ${activeView === 'secondary' ? 'is-active' : ''}`}
+              onClick={() => handleSelectView('secondary')}
+            >
+              002–003 SECONDARY
+            </button>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }

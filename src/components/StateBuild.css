@@ -1,53 +1,62 @@
 /* ═══════════════════════════════════════════════════════
    StateBuild — Spatial Open Architecture
-   Emerges directly from the PRESENCE → BUILD transformation
+   MILESTONE 01A: STRUCTURAL STABILIZATION PASS
    ═══════════════════════════════════════════════════════ */
 
-.build-spatial-stage {
+/* ─── Centering Element: Owns left/top/translate centering ─── */
+.build-stage-wrapper {
   position: absolute;
   left: 50%;
-  top: 52%;
+  top: 50%;
   transform: translate(-50%, -50%);
-  width: min(94vw, 1240px);
-  max-height: 84svh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  /* Translucent frosted surface — permits transformed orbital rings & signal network to show through */
-  background: rgba(243, 241, 235, 0.76);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(23, 23, 23, 0.14);
-  padding: 24px clamp(18px, 3.5vw, 36px) 36px;
-  z-index: 12;
-  transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.04);
+  width: min(92vw, 1160px);
+  pointer-events: none;
+  z-index: var(--z-build, 4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Custom subtle scrollbar */
-.build-spatial-stage::-webkit-scrollbar {
-  width: 4px;
-}
-.build-spatial-stage::-webkit-scrollbar-thumb {
-  background: rgba(23, 23, 23, 0.2);
+/* ─── Animated Scene Stage: Owns opacity, entry Y displacement, surface styling ─── */
+.build-spatial-stage {
+  width: 100%;
+  box-sizing: border-box;
+  /* Translucent frosted surface — permits background armature & signal network to show through */
+  background: rgba(243, 241, 235, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  padding: clamp(12px, 1.8vh, 18px) clamp(14px, 2.4vw, 28px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.05);
+
+  /* Animation owned by CSS via custom property */
+  transform: translateY(var(--build-offset-y, 0px));
+  opacity: var(--build-opacity, 0);
+  transition: opacity 0.35s var(--ease-out-expo), transform 0.35s var(--ease-out-expo);
+
+  /* NO nested scroll containers: main window scroll is the single source of truth */
+  overflow: hidden;
 }
 
-/* ─── Top Status Bar ───────────────────────────────── */
+/* ─── Top Architecture Status Bar ───────────────────────────────── */
 .build-status-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--ink);
-  padding-bottom: 12px;
-  margin-bottom: 24px;
+  padding-bottom: 8px;
+  margin-bottom: clamp(10px, 1.4vh, 16px);
+  gap: 12px;
 }
 
 .build-status-left {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--ink);
+  white-space: nowrap;
 }
 
 .build-status-dot {
@@ -63,54 +72,111 @@
   to { transform: scale(1.3); opacity: 0.6; }
 }
 
-.build-status-right {
+/* Specimen Navigation Pills */
+.build-specimen-nav {
   display: flex;
-  gap: 16px;
-  font-size: 9.5px;
-  color: var(--muted);
+  align-items: center;
+  gap: 6px;
 }
 
-/* ─── Hero Specimen Grid (THE LEDGER) ──────────────── */
+.specimen-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  letter-spacing: 0.04em;
+}
+
+.specimen-nav-btn:hover {
+  background: rgba(23, 23, 23, 0.05);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.specimen-nav-btn.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.specimen-nav-btn.is-active .specimen-nav-id {
+  color: var(--lime);
+}
+
+.specimen-nav-id {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.build-status-right {
+  display: flex;
+  gap: 12px;
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ─── Primary Specimen Panel: THE LEDGER (001) ──────────────── */
+.build-specimen-panel {
+  display: block;
+  animation: specimenFadeIn 0.3s var(--ease-out-expo);
+}
+
+@keyframes specimenFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .specimen-main-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(16px, 2.5vw, 36px);
   align-items: start;
 }
 
 .specimen-left {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(8px, 1.2vh, 12px);
 }
 
 .specimen-badge-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .specimen-badge {
-  font-size: 9px;
+  font-size: 8.5px;
   background: var(--blue);
   color: #fff;
-  padding: 3px 7px;
+  padding: 2px 6px;
   letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .specimen-type,
 .specimen-year {
-  font-size: 9.5px;
+  font-size: 9px;
   color: var(--muted);
 }
 
 .specimen-title {
-  font-size: clamp(38px, 6vw, 76px);
-  line-height: 0.85;
-  letter-spacing: -0.06em;
+  font-size: clamp(28px, 3.8vw, 50px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
   font-weight: 900;
   text-transform: uppercase;
-  margin: 4px 0 0;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
 }
@@ -120,31 +186,31 @@
 }
 
 .specimen-subtitle {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--blue);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .specimen-narrative {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: 6px;
+  gap: 12px;
 }
 
 .narrative-block {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .narrative-label {
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--muted);
+  letter-spacing: 0.06em;
 }
 
 .narrative-text {
-  font-size: 13px;
+  font-size: 11.5px;
   line-height: 1.35;
   color: var(--ink);
 }
@@ -153,28 +219,28 @@
 .specimen-stack-wrap {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 6px;
 }
 
 .stack-label {
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--muted);
+  letter-spacing: 0.06em;
 }
 
 .specimen-stack {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .tech-chip {
-  font-size: 9.5px;
-  padding: 3px 7px;
-  border: 1px solid rgba(23, 23, 23, 0.2);
-  background: rgba(243, 241, 235, 0.9);
+  font-size: 9px;
+  padding: 2px 6px;
+  border: 1px solid rgba(23, 23, 23, 0.18);
+  background: rgba(243, 241, 235, 0.85);
   color: var(--ink);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   transition: all 0.2s ease;
 }
 
@@ -187,16 +253,16 @@
 /* Action Triggers */
 .specimen-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 .specimen-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  font-size: 10.5px;
+  gap: 6px;
+  padding: 7px 13px;
+  font-size: 9.5px;
   letter-spacing: 0.08em;
   font-weight: 700;
   text-decoration: none;
@@ -228,213 +294,184 @@
   transform: translateY(-2px);
 }
 
-/* Right Panel: Waveform & Technical Spec */
+/* Right Column: Oscilloscope & Architecture Card */
 .specimen-right {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(10px, 1.4vh, 14px);
 }
 
 .specimen-instrument-panel {
   border: 1px solid var(--ink);
   background: var(--ink);
-  padding: 14px 16px 12px;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  color: var(--paper);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-}
-
-.panel-status {
-  color: var(--lime);
 }
 
 .specimen-detail-card {
   border: 1px solid rgba(23, 23, 23, 0.16);
-  background: rgba(255, 255, 255, 0.4);
-  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.45);
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .detail-card-header {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--muted);
+  letter-spacing: 0.06em;
 }
 
 .detail-card-body {
-  font-size: 12.5px;
-  line-height: 1.4;
+  font-size: 11.5px;
+  line-height: 1.35;
   color: var(--ink);
 }
 
-/* ─── Secondary Instruments Explorer ───────────────── */
-.build-secondary {
-  margin-top: 36px;
-  border-top: 1px solid var(--ink);
-  padding-top: 16px;
+/* ─── Secondary Instruments View (002 ESTATE PRO & 003 EXPERIMENTS) ─── */
+.build-secondary-panel {
+  display: block;
+  animation: specimenFadeIn 0.3s var(--ease-out-expo);
 }
 
-.secondary-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 9.5px;
-  color: var(--muted);
-  margin-bottom: 12px;
-}
-
-.secondary-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.secondary-row-item {
-  border-bottom: 1px solid rgba(23, 23, 23, 0.12);
-}
-
-.secondary-trigger {
-  width: 100%;
+.secondary-specimens-grid {
   display: grid;
-  grid-template-columns: 140px 180px 1fr 24px;
-  align-items: baseline;
-  gap: 16px;
-  padding: 14px 8px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(14px, 2.2vw, 24px);
 }
 
-.secondary-trigger:hover,
-.secondary-trigger.is-open {
-  background: rgba(25, 71, 229, 0.05);
-  padding-left: 14px;
-}
-
-.secondary-meta {
-  display: flex;
-  gap: 8px;
-  font-size: 9.5px;
-  color: var(--blue);
-}
-
-.sec-name {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-
-.sec-subtitle {
-  font-size: 10.5px;
-  color: var(--muted);
-}
-
-.sec-arrow {
-  font-size: 14px;
-  color: var(--blue);
-  text-align: right;
-  font-weight: 700;
-}
-
-/* Secondary Drawer Detail */
-.secondary-drawer {
-  padding: 12px 14px 20px;
-  background: rgba(23, 23, 23, 0.02);
-  border-top: 1px dashed rgba(23, 23, 23, 0.1);
-  animation: drawerSlide 0.25s var(--ease-out-expo);
-}
-
-@keyframes drawerSlide {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.drawer-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 24px;
-}
-
-.drawer-text {
+.secondary-instrument-card {
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  background: rgba(255, 255, 255, 0.45);
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 12.5px;
-  line-height: 1.4;
+  gap: 10px;
 }
 
-.drawer-sublabel {
-  font-size: 8.5px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-
-.drawer-stack {
+.sec-card-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.drawer-chips {
-  display: flex;
-  flex-wrap: wrap;
   gap: 4px;
 }
 
-.drawer-btn {
-  align-self: flex-start;
-  margin-top: 8px;
-  padding: 6px 10px;
-  font-size: 9.5px;
+.sec-card-title {
+  font-size: clamp(20px, 2.6vw, 30px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0;
 }
 
-/* ─── Responsive Media Queries ─────────────────────── */
-@media (max-width: 960px) {
-  .specimen-main-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .secondary-trigger {
-    grid-template-columns: 80px 140px 1fr 20px;
-  }
+.sec-card-narrative {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-@media (max-width: 680px) {
-  .build-spatial-stage {
-    width: 96vw;
-    padding: 16px 14px 24px;
-    top: 50%;
-    max-height: 86svh;
-  }
+.sec-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
 
+.sec-action-btn {
+  padding: 5px 9px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* ─── Bottom Subordinate Bar ────────────────────────────────────────── */
+.build-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(23, 23, 23, 0.12);
+  margin-top: clamp(8px, 1.4vh, 14px);
+  padding-top: 8px;
+  font-size: 9px;
+  color: var(--muted);
+  gap: 12px;
+}
+
+.build-bottom-hint {
+  letter-spacing: 0.06em;
+}
+
+.build-bottom-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.bottom-toggle-btn {
+  background: transparent;
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.bottom-toggle-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.bottom-toggle-btn.is-active {
+  background: rgba(25, 71, 229, 0.08);
+  color: var(--blue);
+  border-color: var(--blue);
+  font-weight: 700;
+}
+
+/* ─── Responsive Media Queries ─────────────────────────────────────── */
+@media (max-width: 900px) {
   .build-status-right {
     display: none;
   }
 
+  .secondary-specimens-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 680px) {
+  .build-stage-wrapper {
+    width: 95vw;
+  }
+
+  .build-spatial-stage {
+    padding: 10px 12px;
+  }
+
+  .specimen-main-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .specimen-title {
+    font-size: clamp(24px, 7.5vw, 34px);
+  }
+
   .specimen-narrative {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .secondary-trigger {
-    grid-template-columns: 50px 1fr 20px;
-  }
-
-  .sec-subtitle {
-    display: none;
-  }
-
-  .drawer-grid {
+  .sec-card-narrative {
     grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .build-bottom-hint {
+    display: none;
   }
 }

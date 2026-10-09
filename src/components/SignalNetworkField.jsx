@@ -20,14 +20,13 @@ import './SignalNetworkField.css';
 export default function SignalNetworkField({
   progress = 0,
   velocity = 0,
-  pointer = { nx: 0, ny: 0 },
 }) {
   const canvasRef = useRef(null);
-  const stateRef = useRef({ progress, velocity, pointer });
+  const stateRef = useRef({ progress, velocity });
 
   useEffect(() => {
-    stateRef.current = { progress, velocity, pointer };
-  }, [progress, velocity, pointer]);
+    stateRef.current = { progress, velocity };
+  }, [progress, velocity]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -48,12 +47,28 @@ export default function SignalNetworkField({
     window.addEventListener('resize', resize);
     resize();
 
+    let targetNx = 0;
+    let targetNy = 0;
+    let currentNx = 0;
+    let currentNy = 0;
+
+    const onPointerMove = (e) => {
+      targetNx = (e.clientX / window.innerWidth) - 0.5;
+      targetNy = (e.clientY / window.innerHeight) - 0.5;
+    };
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+
     let animId;
     let time = 0;
 
     function render() {
       time += 0.02;
-      const { progress: t, velocity: vel, pointer: ptr } = stateRef.current;
+      currentNx += (targetNx - currentNx) * 0.08;
+      currentNy += (targetNy - currentNy) * 0.08;
+      const ptr = { nx: currentNx, ny: currentNy };
+
+      const { progress: t, velocity: vel } = stateRef.current;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -193,6 +208,7 @@ export default function SignalNetworkField({
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', onPointerMove);
       if (animId) cancelAnimationFrame(animId);
     };
   }, []);
