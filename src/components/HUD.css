@@ -132,14 +132,18 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-  .hud-channels {
+  .hud-channel-btn .hud-ch-label {
     display: none;
+  }
+
+  .hud-channels {
+    gap: 4px;
   }
 }
 
 @media (max-width: 640px) {
   .hud {
-    padding: 12px 14px 10px;
+    padding: 10px 14px 8px;
   }
 
   .hud-identity,
@@ -149,5 +153,9 @@
 
   .hud-audio-toggle span:last-child {
     display: none;
+  }
+
+  .hud-channel-btn {
+    padding: 3px 6px;
   }
 }

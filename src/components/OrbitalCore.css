@@ -251,40 +251,50 @@
 }
 
 /* Responsive */
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .orbital-core {
-    width: min(88vw, 480px);
+    width: min(84vw, 440px);
+  }
+
+  .c-corner-note {
+    display: none;
   }
 }
 
 @media (max-width: 520px) {
   .orbital-core {
-    width: 94vw;
+    width: min(82vw, 330px);
   }
 
   .c-identity-name {
-    font-size: clamp(48px, 14vw, 80px);
+    font-size: clamp(40px, 12vw, 68px);
+  }
+
+  .c-identity-pre {
+    font-size: 9px;
+    margin-bottom: 6px;
   }
 
   .c-identity-sub {
-    font-size: 13px;
-    max-width: 260px;
+    font-size: 11.5px;
+    max-width: 240px;
   }
 
   .c-node {
-    padding: 6px 9px;
-    min-width: 50px;
+    padding: 4px 7px;
+    min-width: 42px;
+  }
+
+  .c-node-signal {
+    font-size: 7.5px;
   }
 
   .c-node-label {
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .c-corner-note,
-  .c-scroll-hint {
-    bottom: -64px;
-  }
-
+  .c-scroll-hint,
   .c-edge-label {
     display: none;
   }

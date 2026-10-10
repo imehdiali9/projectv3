@@ -33,6 +33,7 @@ export default function OrbitalCore({
 
   // Individual glyph refs for MEHDI (0-4) and ALI. (5-8)
   const glyphRefs = useRef([]);
+  const orbitRef = useRef(null);
 
   // Store live state in a ref so RAF always reads fresh values
   const stateRef = useRef({
@@ -231,18 +232,10 @@ export default function OrbitalCore({
           gy = (traj.by + (traj.cy - traj.by) * pC) * scat;
           gRot = (traj.rot * pC);
           if (traj.scale) gScale = 1.0 + (traj.scale - 1.0) * pC;
-          gOpacity = 1.0 - pC * 0.15; // stays clearly visible
-        } else if (t < 0.85) {
-          // Phase D: Convergence toward THE LEDGER anchor
-          const pD = (t - 0.65) / 0.20;
-          const targetX = -120 + idx * 18;
-          const targetY = -120;
-          gx = traj.cx + (targetX - traj.cx) * pD;
-          gy = traj.cy + (targetY - traj.cy) * pD;
-          gRot = traj.rot * (1 - pD);
-          gOpacity = Math.max(0, 0.85 - pD * 0.95);
+          // Physical glyph fracture visible as letters scatter, dissolving cleanly by t ~ 0.60
+          gOpacity = Math.max(0, 1.0 - pC * 1.6);
         } else {
-          // Phase E: Locked into Build
+          // Phase D & E: Dissolved before project specimen dominates
           gOpacity = 0;
         }
 
@@ -256,6 +249,21 @@ export default function OrbitalCore({
       if (identityRef.current) {
         const idOpacity = t < 0.15 ? 1.0 : Math.max(0, 1.0 - (t - 0.15) * 4);
         identityRef.current.style.opacity = idOpacity;
+      }
+
+      // Orbital navigation nodes: fade out cleanly during Phase B (0.15 -> 0.40) and disappear completely for BUILD
+      if (orbitRef.current) {
+        const orbitOpacity = t < 0.15 ? 1.0 : Math.max(0, 1.0 - (t - 0.15) * 4);
+        orbitRef.current.style.opacity = orbitOpacity;
+        orbitRef.current.style.display = t >= 0.40 ? 'none' : 'block';
+        orbitRef.current.style.pointerEvents = orbitOpacity > 0.1 ? 'auto' : 'none';
+        if (orbitOpacity <= 0.05) {
+          orbitRef.current.setAttribute('inert', '');
+          orbitRef.current.setAttribute('aria-hidden', 'true');
+        } else {
+          orbitRef.current.removeAttribute('inert');
+          orbitRef.current.setAttribute('aria-hidden', 'false');
+        }
       }
 
       // ─── 5. PRESENCE DECORATIONS & ANNOTATIONS ──────────────────
@@ -339,7 +347,18 @@ export default function OrbitalCore({
       </div>
 
       {/* Orbital navigation nodes */}
-      <nav className="c-orbit" aria-label="Page sections">
+      <nav
+        ref={orbitRef}
+        className="c-orbit"
+        style={{
+          opacity: presenceToBuildProgress < 0.15 ? 1 : Math.max(0, 1 - (presenceToBuildProgress - 0.15) * 4),
+          display: presenceToBuildProgress >= 0.40 ? 'none' : 'block',
+          pointerEvents: presenceToBuildProgress < 0.15 ? 'auto' : 'none',
+        }}
+        aria-label="Page sections"
+        inert={stateIndex !== 0 || undefined}
+        aria-hidden={stateIndex !== 0}
+      >
         {NODES.map((node) => {
           const isActive = node.target === currentStateKey;
           return (

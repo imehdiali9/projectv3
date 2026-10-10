@@ -18,15 +18,17 @@ import './SignalNetworkField.css';
  * - Fully reversible based on progress (0→1)
  */
 export default function SignalNetworkField({
-  progress = 0,
+  isActive = false,
+  transitionProgress = 0,
+  rawState = 0,
   velocity = 0,
 }) {
   const canvasRef = useRef(null);
-  const stateRef = useRef({ progress, velocity });
+  const stateRef = useRef({ isActive, transitionProgress, rawState, velocity });
 
   useEffect(() => {
-    stateRef.current = { progress, velocity };
-  }, [progress, velocity]);
+    stateRef.current = { isActive, transitionProgress, rawState, velocity };
+  }, [isActive, transitionProgress, rawState, velocity]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,17 +68,19 @@ export default function SignalNetworkField({
       time += 0.02;
       currentNx += (targetNx - currentNx) * 0.08;
       currentNy += (targetNy - currentNy) * 0.08;
-      const ptr = { nx: currentNx, ny: currentNy };
-
-      const { progress: t, velocity: vel } = stateRef.current;
-
       ctx.clearRect(0, 0, w, h);
 
-      // Only active during transition and early BUILD
-      if (t < 0.12) {
+      const { isActive: active, rawState: rState, velocity: vel } = stateRef.current;
+
+      // Strictly active during PRESENCE -> BUILD transition lifecycle
+      // Completely clears canvas and halts drawing outside this bounded window
+      if (!active) {
         animId = requestAnimationFrame(render);
         return;
       }
+
+      const t = Math.min(1, Math.max(0, rState));
+      const ptr = { nx: currentNx, ny: currentNy };
 
       const cx = w * 0.5 + ptr.nx * 20;
       const cy = h * 0.5 + ptr.ny * 20;
@@ -170,10 +174,11 @@ export default function SignalNetworkField({
         });
       }
 
-      // ─── 3. Build Structural Grid Lines (Phase D & E: 0.70 → 1.0) ───
-      if (t >= 0.7) {
-        const eProgress = Math.min(1, Math.max(0, (t - 0.7) / 0.3));
-        const alpha = eProgress * 0.22;
+      // ─── 3. Build Structural Grid Lines (Phase D & E: 0.70 → 1.0, fades out completely by 1.15) ───
+      if (rState >= 0.70 && rState < 1.15) {
+        const alpha = rState <= 1.0
+          ? ((rState - 0.70) / 0.30) * 0.22
+          : ((1.15 - rState) / 0.15) * 0.22;
 
         ctx.setLineDash([]);
         ctx.strokeStyle = `rgba(23, 23, 23, ${alpha})`;
@@ -216,7 +221,11 @@ export default function SignalNetworkField({
   return (
     <canvas
       ref={canvasRef}
-      className="signal-network-field"
+      className={`signal-network-field ${isActive ? 'is-active' : ''}`}
+      style={{
+        display: isActive ? 'block' : 'none',
+        pointerEvents: 'none',
+      }}
       aria-hidden="true"
     />
   );

@@ -5,23 +5,23 @@
 .transmission {
   position: absolute;
   left: 50%;
-  top: 48%;
+  top: 50%;
   width: min(90vw, 1080px);
-  max-height: 80svh;
-  overflow-y: auto;
+  /* Single page-scroll system: NO nested scroll container */
+  overflow: hidden;
   /* Solid paper background — cleanly occludes orbital rings */
   background: var(--paper);
-  padding: 28px 32px 32px;
+  padding: clamp(18px, 2.4vh, 28px) clamp(20px, 3vw, 32px);
   /* Subtle border like a document */
   border: 1px solid rgba(23,23,23,0.08);
-  transform: translate(-50%, -50%) scale(0.86) translateY(16px);
+  transform: translate(-50%, -50%) scale(0.92) translateY(12px);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.55s var(--ease-out-expo),
-    transform 0.65s var(--ease-out-expo),
-    visibility 0.55s;
+    opacity 0.45s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo),
+    visibility 0.45s;
   z-index: var(--z-transmission, 4);
   will-change: transform, opacity;
 }
@@ -39,19 +39,20 @@
   justify-content: space-between;
   align-items: flex-end;
   border-bottom: 1px solid var(--ink);
-  padding-bottom: 10px;
-  margin-bottom: 28px;
+  padding-bottom: 8px;
+  margin-bottom: clamp(12px, 1.8vh, 20px);
 }
 
 .transmission-desc {
   color: var(--muted);
 }
 
-/* ─── State-specific max-height so it doesn't overflow ─── */
+/* ─── Short viewports ─── */
 @media (max-height: 700px) {
   .transmission {
-    top: 54%;
-    font-size: 85%;
+    top: 50%;
+    padding: 14px 20px 20px;
+    font-size: 90%;
   }
 }
 

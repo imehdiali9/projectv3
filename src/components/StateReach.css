@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
-  gap: 24px 36px;
+  gap: clamp(12px, 1.8vh, 18px) clamp(16px, 2.5vw, 28px);
   align-items: end;
 }
 
@@ -12,14 +12,14 @@
   grid-row: 1;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
   align-items: flex-start;
 }
 
 .reach-title {
-  font-size: clamp(60px, 11vw, 152px);
-  line-height: 0.74;
-  letter-spacing: -0.08em;
+  font-size: clamp(38px, 6vw, 76px);
+  line-height: 0.82;
+  letter-spacing: -0.07em;
   text-transform: uppercase;
   font-weight: 900;
   margin: 0;
@@ -30,7 +30,7 @@
 }
 
 .reach-sub {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--muted);
 }
 
@@ -40,15 +40,15 @@
   grid-row: 1 / 3;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: clamp(8px, 1.4vh, 14px);
   align-items: flex-end;
   text-align: right;
 }
 
 .reach-label {
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--muted);
-  line-height: 1.7;
+  line-height: 1.5;
   max-width: 280px;
 }
 
@@ -59,7 +59,7 @@
   text-decoration: none;
   color: var(--ink);
   border-bottom: 1px solid var(--ink);
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   transition: color 0.2s, border-color 0.2s;
 }
 
@@ -69,32 +69,32 @@
 }
 
 .reach-email {
-  font-size: clamp(11px, 1.3vw, 15px);
+  font-size: clamp(10.5px, 1.2vw, 13.5px);
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
   word-break: break-all;
 }
 
 .reach-email-arrow {
-  font-size: 18px;
+  font-size: 16px;
   flex-shrink: 0;
 }
 
 .reach-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   align-items: flex-end;
 }
 
 .reach-link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   text-decoration: none;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   transition: color 0.2s;
 }
@@ -104,18 +104,18 @@
 }
 
 .reach-link-arrow {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .reach-email-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .reach-copy-btn {
-  font-size: 9px;
-  padding: 4px 8px;
+  font-size: 8.5px;
+  padding: 3px 7px;
   background: transparent;
   border: 1px solid var(--ink);
   color: var(--ink);
@@ -147,33 +147,33 @@
 .reach-terminal-bar {
   background: var(--ink);
   color: var(--paper);
-  padding: 8px 14px;
+  padding: 6px 12px;
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 8.5px;
   letter-spacing: 0.08em;
 }
 
 .reach-terminal-body {
-  padding: 14px 14px;
-  min-height: 80px;
+  padding: 8px 12px;
+  min-height: 55px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: 11px;
+  gap: 6px;
+  font-size: 10.5px;
 }
 
 .reach-log-line {
   color: var(--muted);
-  line-height: 1.4;
+  line-height: 1.35;
   word-break: break-word;
 }
 
 .reach-term-form {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 6px;
+  margin-top: 2px;
 }
 
 .reach-prompt {
@@ -187,7 +187,7 @@
   border: none;
   outline: none;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 10.5px;
 }
 
 .reach-term-input::placeholder {
@@ -198,6 +198,7 @@
   .reach {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    gap: 12px;
   }
 
   .reach-contacts {
@@ -207,6 +208,10 @@
     text-align: left;
   }
 
+  .reach-links {
+    align-items: flex-start;
+  }
+
   .reach-terminal {
     grid-row: 3;
   }
@@ -214,6 +219,6 @@
 
 @media (max-width: 520px) {
   .reach-title {
-    font-size: clamp(50px, 15vw, 80px);
+    font-size: clamp(28px, 8vw, 40px);
   }
 }

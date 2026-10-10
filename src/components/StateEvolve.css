@@ -5,12 +5,12 @@
 }
 
 .evolve-title {
-  font-size: clamp(44px, 8vw, 118px);
-  line-height: 0.82;
-  letter-spacing: -0.07em;
+  font-size: clamp(28px, 4.2vw, 54px);
+  line-height: 0.88;
+  letter-spacing: -0.06em;
   text-transform: uppercase;
   font-weight: 900;
-  margin-bottom: 44px;
+  margin-bottom: clamp(10px, 1.4vh, 16px);
 }
 
 .evolve-title-accent {
@@ -20,11 +20,11 @@
 /* Measuring instrument */
 .evolve-instrument {
   position: relative;
-  height: 240px;
+  height: clamp(140px, 18vh, 175px);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   overflow: hidden;
-  margin-bottom: 32px;
+  margin-bottom: clamp(10px, 1.4vh, 16px);
 }
 
 .evolve-baseline {
@@ -57,25 +57,25 @@
   left: 7px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   white-space: nowrap;
 }
 
 .evolve-tick-label.label-top {
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 4px);
 }
 
 .evolve-tick-label.label-bottom {
-  top: calc(100% + 6px);
+  top: calc(100% + 4px);
 }
 
 .evolve-tick-year {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--muted);
 }
 
 .evolve-tick-event {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--ink);
   font-weight: 700;
 }
@@ -85,43 +85,43 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--red);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 8px rgba(255, 86, 55, 0.12);
+  box-shadow: 0 0 0 6px rgba(255, 86, 55, 0.12);
   animation: nowPulse 2s ease-in-out infinite;
 }
 
 @keyframes nowPulse {
-  0%, 100% { box-shadow: 0 0 0 8px rgba(255, 86, 55, 0.12); }
-  50% { box-shadow: 0 0 0 16px rgba(255, 86, 55, 0.04); }
+  0%, 100% { box-shadow: 0 0 0 6px rgba(255, 86, 55, 0.12); }
+  50% { box-shadow: 0 0 0 12px rgba(255, 86, 55, 0.04); }
 }
 
 /* YOU ARE HERE label */
 .evolve-here {
   position: absolute;
-  top: 16px;
+  top: 10px;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--red);
   letter-spacing: 0.06em;
 }
 
-/* Notes list */
+/* Notes list — responsive 2-column grid prevents vertical overflow on compact viewports */
 .evolve-notes {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 6px 16px;
   border-top: 1px solid var(--line);
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .evolve-note {
   display: flex;
-  gap: 12px;
-  font-size: 11px;
+  gap: 10px;
+  font-size: 10px;
   color: var(--muted);
   transition: color 0.2s;
 }
@@ -131,13 +131,19 @@
 }
 
 .evolve-note-marker {
-  width: 16px;
+  width: 14px;
   flex-shrink: 0;
 }
 
 @media (max-width: 520px) {
+  .evolve-title {
+    font-size: clamp(26px, 7.5vw, 36px);
+    margin-bottom: 10px;
+  }
+
   .evolve-instrument {
-    height: 180px;
+    height: 110px;
+    margin-bottom: 10px;
   }
 
   .evolve-tick-label {
@@ -146,5 +152,10 @@
 
   .evolve-tick.is-now .evolve-tick-label {
     display: flex;
+  }
+
+  .evolve-notes {
+    gap: 4px;
+    padding-top: 8px;
   }
 }

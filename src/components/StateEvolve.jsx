@@ -21,7 +21,7 @@ export default function StateEvolve() {
             className={`evolve-tick ${point.isNow ? 'is-now' : ''}`}
             style={{
               left: `${point.position}%`,
-              height: `${point.height}px`,
+              height: `${Math.round(point.height * 0.58)}px`,
             }}
             aria-hidden="true"
           >

@@ -17,7 +17,6 @@ import './StateBuild.css';
  * - 100% reversible and deterministic with document scroll.
  */
 export default function StateBuild({
-  progress = 0,
   localProgress = 0,
   isActive = false,
   rawState = 0,
@@ -41,16 +40,35 @@ export default function StateBuild({
   const estatePro = PROJECTS[1];
   const experiments = PROJECTS[2];
 
-  // Visibility range: emerges in Phase C/D (progress >= 0.40) and remains active during State 1
-  const isEmerging = (progress >= 0.40 && rawState < 2.05) || isActive;
-  if (!isEmerging && !isActive) {
+  // 1. State visibility: strictly within [0.45, 2.00)
+  // Emergence starts at 0.45, settles in State 1 [1.0, 2.0), ends strictly before State 2 (2.00)
+  const isVisible = rawState >= 0.45 && rawState < 2.00;
+  if (!isVisible) {
     return null;
   }
 
-  // Emergence calculation (0.40 -> 0.85)
-  const emergenceProgress = Math.min(1, Math.max(0, (progress - 0.40) / 0.45));
-  const displayOpacity = isActive ? 1 : emergenceProgress;
-  const translateY = isActive ? 0 : (1 - emergenceProgress) * 32;
+  // 2. Active interaction: only when fully settled in State 1 and not exiting
+  const isInteractable = isActive && rawState >= 0.85 && rawState < 1.95;
+
+  // 3. Emergence progress (0 -> 1 during emergence, 1 during lock, 1 -> 0 during exit)
+  let displayOpacity = 0;
+  let translateY = 0;
+
+  if (rawState < 0.85) {
+    // Emergence phase: 0.45 -> 0.85
+    const p = Math.min(1, Math.max(0, (rawState - 0.45) / 0.40));
+    displayOpacity = p;
+    translateY = (1 - p) * 28;
+  } else if (rawState <= 1.90) {
+    // Locked full BUILD phase
+    displayOpacity = 1;
+    translateY = 0;
+  } else if (rawState < 2.00) {
+    // Exit scrub phase into BROADCAST: 1.90 -> 2.00
+    const p = (2.00 - rawState) / 0.10;
+    displayOpacity = Math.max(0, p);
+    translateY = (1 - p) * -16;
+  }
 
   const handleSelectView = (viewKey) => {
     playNodeClick();
@@ -60,14 +78,15 @@ export default function StateBuild({
   return (
     <div
       className="build-stage-wrapper"
-      aria-hidden={!isActive && displayOpacity < 0.1}
+      inert={!isInteractable ? true : undefined}
+      aria-hidden={!isInteractable}
     >
       <div
-        className={`build-spatial-stage ${isActive ? 'is-active' : ''}`}
+        className={`build-spatial-stage ${isInteractable ? 'is-active' : ''}`}
         style={{
           '--build-offset-y': `${translateY}px`,
           '--build-opacity': displayOpacity,
-          pointerEvents: isActive ? 'auto' : 'none',
+          pointerEvents: isInteractable ? 'auto' : 'none',
         }}
         role="region"
         aria-label="02 BUILD — Selected Instruments"
@@ -129,7 +148,7 @@ export default function StateBuild({
                         display: 'inline-block',
                         transform: isActive
                           ? 'none'
-                          : `translateY(${(1 - emergenceProgress) * (i % 2 ? 12 : -12)}px)`,
+                          : `translateY(${(1 - displayOpacity) * (i % 2 ? 12 : -12)}px)`,
                       }}
                     >
                       {char === ' ' ? '\u00A0' : char}

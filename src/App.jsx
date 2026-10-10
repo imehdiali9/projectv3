@@ -139,6 +139,10 @@ export default function App() {
   // Editorial copy is visible in Phase A, smoothly fading in Phase B
   const isPresenceCopyVisible = presenceToBuildProgress < 0.25 && stateIndex === 0;
 
+  // Signal network field lifecycle: active strictly during PRESENCE -> BUILD and settling into BUILD (0.12 <= rawState < 1.15)
+  const isTransitionFieldActive = rawState >= 0.12 && rawState < 1.15;
+  const transitionFieldProgress = Math.min(1, Math.max(0, (rawState - 0.12) / 0.88));
+
   return (
     <>
       <AmbientField
@@ -150,7 +154,9 @@ export default function App() {
 
       {/* Vector signal network layer specifically for PRESENCE → BUILD */}
       <SignalNetworkField
-        progress={presenceToBuildProgress}
+        isActive={isTransitionFieldActive}
+        transitionProgress={transitionFieldProgress}
+        rawState={rawState}
         velocity={velocity}
       />
 
@@ -202,11 +208,9 @@ export default function App() {
 
           {/* Emergent spatial BUILD state — no opaque wall */}
           <StateBuild
-            progress={presenceToBuildProgress}
             localProgress={localProgress}
             isActive={stateIndex === 1}
             rawState={rawState}
-            velocity={velocity}
           />
 
           {/* Preserved document transmissions for States 03, 04, 05 */}
